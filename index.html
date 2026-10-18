@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sweet Crumbs — Крафтова випічка</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FDF8F3',
+            beige: '#F5EDE4',
+            coffee: '#8B6F5C',
+            caramel: '#C4A484',
+            chocolate: '#5C4033',
+            soft: '#E8D9C8'
+          },
+          fontFamily: {
+            sans: ['Segoe UI', 'system-ui', 'sans-serif'],
+            serif: ['Georgia', 'Cambria', 'Times New Roman', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    body { background-color: #FDF8F3; }
+    section[id] { scroll-margin-top: 80px; }
+    .cart-panel { transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+    .cart-panel.closed { transform: translateX(100%); }
+    .cart-overlay { transition: opacity 0.3s ease; }
+    .mobile-menu { transition: max-height 0.3s ease, opacity 0.3s ease; }
+    .fade-in { animation: fadeIn 0.35s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .nav-link.active { color: #5C4033; font-weight: 600; }
+  </style>
+</head>
+<body class="font-sans text-chocolate antialiased">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-cream/95 backdrop-blur-md border-b border-soft/80 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <a href="#home" class="font-serif text-2xl sm:text-3xl font-bold text-chocolate tracking-tight">
+        Sweet Crumbs
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-coffee">
+        <a href="#home" class="nav-link hover:text-chocolate transition">Головна</a>
+        <a href="#about" class="nav-link hover:text-chocolate transition">Про нас</a>
+        <a href="#products" class="nav-link hover:text-chocolate transition">Меню</a>
+        <a href="#contacts" class="nav-link hover:text-chocolate transition">Контакти</a>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <!-- Mobile menu button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-full hover:bg-beige transition" aria-label="Меню">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-chocolate" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <!-- Cart -->
+        <button id="cart-btn" class="relative p-2.5 rounded-full hover:bg-beige transition" aria-label="Кошик">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-chocolate" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span id="cart-count" class="absolute -top-0.5 -right-0.5 bg-caramel text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile nav -->
+    <div id="mobile-menu" class="md:hidden overflow-hidden max-h-0 opacity-0 mobile-menu border-t border-soft/60">
+      <nav class="flex flex-col px-4 py-3 gap-1 text-sm font-medium text-coffee">
+        <a href="#home" class="nav-link py-2.5 px-3 rounded-lg hover:bg-beige hover:text-chocolate transition" onclick="closeMobileMenu()">Головна</a>
+        <a href="#about" class="nav-link py-2.5 px-3 rounded-lg hover:bg-beige hover:text-chocolate transition" onclick="closeMobileMenu()">Про нас</a>
+        <a href="#products" class="nav-link py-2.5 px-3 rounded-lg hover:bg-beige hover:text-chocolate transition" onclick="closeMobileMenu()">Меню</a>
+        <a href="#contacts" class="nav-link py-2.5 px-3 rounded-lg hover:bg-beige hover:text-chocolate transition" onclick="closeMobileMenu()">Контакти</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section id="home" class="relative overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20 lg:py-28 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <div class="space-y-6">
+        <p class="text-caramel font-medium tracking-widest uppercase text-sm">Свіжа випічка щоранку</p>
+        <h1 class="font-serif text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-chocolate leading-[1.15]">
+          Затишні смаколики<br>з любов’ю до деталей
+        </h1>
+        <p class="text-coffee text-lg leading-relaxed max-w-md">
+          Крафтова випічка з натуральних інгредієнтів. Аромат круасанів і тепло кави — саме те, що потрібно для ідеального ранку.
+        </p>
+        <a href="#products" class="inline-block bg-chocolate text-cream px-8 py-3.5 rounded-full font-medium hover:bg-coffee transition shadow-md hover:shadow-lg">
+          Обрати смаколик
+        </a>
+      </div>
+      <div class="relative">
+        <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=900&q=80" alt="Свіжа випічка" class="rounded-3xl shadow-xl object-cover w-full h-72 sm:h-96 lg:h-[440px]">
+        <div class="absolute -bottom-4 -left-4 bg-beige rounded-2xl px-5 py-3 shadow-lg hidden sm:block border border-soft/50">
+          <p class="text-sm font-medium text-chocolate">Печемо щодня з 6:00</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Us -->
+  <section id="about" class="py-16 sm:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div class="order-2 lg:order-1">
+          <img src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=800&q=80" alt="Пекар за роботою" class="rounded-3xl shadow-xl object-cover w-full h-80 lg:h-[460px]">
+        </div>
+        <div class="order-1 lg:order-2 space-y-6">
+          <p class="text-caramel font-medium tracking-widest uppercase text-sm">Наша історія</p>
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-chocolate leading-tight">
+            Сімейні традиції та натуральний смак
+          </h2>
+          <p class="text-coffee leading-relaxed">
+            Sweet Crumbs народилася з любові до домашньої випічки. Ми бережемо рецепти, передані від бабусі, і поєднуємо їх із сучасними техніками. Кожен круасан, кожна булочка — це результат ретельної роботи руками.
+          </p>
+          <p class="text-coffee leading-relaxed">
+            Використовуємо лише відбірне борошно, свіже масло, бельгійський шоколад і сезонні ягоди. Жодних штучних добавок — тільки справжній смак і тепло.
+          </p>
+          <div class="grid grid-cols-3 gap-3 sm:gap-4 pt-4">
+            <div class="text-center p-3 sm:p-4 bg-beige/70 rounded-2xl">
+              <p class="font-serif text-2xl sm:text-3xl font-bold text-chocolate">5</p>
+              <p class="text-xs sm:text-sm text-coffee mt-1 leading-snug">років даруємо радість</p>
+            </div>
+            <div class="text-center p-3 sm:p-4 bg-beige/70 rounded-2xl">
+              <p class="font-serif text-2xl sm:text-3xl font-bold text-chocolate">15+</p>
+              <p class="text-xs sm:text-sm text-coffee mt-1 leading-snug">видів випічки щодня</p>
+            </div>
+            <div class="text-center p-3 sm:p-4 bg-beige/70 rounded-2xl">
+              <p class="font-serif text-2xl sm:text-3xl font-bold text-chocolate">100%</p>
+              <p class="text-xs sm:text-sm text-coffee mt-1 leading-snug">натуральні інгредієнти</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products / Menu -->
+  <section id="products" class="py-16 sm:py-20 bg-beige/40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12">
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-chocolate mb-3">Меню</h2>
+        <p class="text-coffee max-w-xl mx-auto">Оберіть свій улюблений смаколик — усе печеться щоранку</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+
+        <!-- 1. Круасан -->
+        <article class="bg-cream rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition group">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80" alt="Класичний круасан" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="p-5 space-y-3">
+            <h3 class="font-serif text-xl font-semibold text-chocolate">Класичний круасан</h3>
+            <p class="text-sm text-coffee leading-relaxed">Ніжний листковий круасан з хрусткою скоринкою та маслянистим смаком.</p>
+            <div class="flex items-center justify-between pt-2 gap-2">
+              <span class="text-lg font-bold text-chocolate whitespace-nowrap">85 грн</span>
+              <button onclick="addToCart('croissant', 'Класичний круасан', 85)" class="bg-caramel text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-chocolate transition shrink-0">
+                Додати в кошик
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2. Булочка з корицею -->
+        <article class="bg-cream rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition group">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=600&q=80" alt="Булочка з корицею" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="p-5 space-y-3">
+            <h3 class="font-serif text-xl font-semibold text-chocolate">Булочка з корицею</h3>
+            <p class="text-sm text-coffee leading-relaxed">М’яка булочка з корицею, горіхами та ніжною цукровою глазур’ю.</p>
+            <div class="flex items-center justify-between pt-2 gap-2">
+              <span class="text-lg font-bold text-chocolate whitespace-nowrap">95 грн</span>
+              <button onclick="addToCart('cinnamon', 'Булочка з корицею', 95)" class="bg-caramel text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-chocolate transition shrink-0">
+                Додати в кошик
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3. Макаруни -->
+        <article class="bg-cream rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition group">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1558326567-98ae2405596b?w=600&q=80" alt="Макаруни асорті" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="p-5 space-y-3">
+            <h3 class="font-serif text-xl font-semibold text-chocolate">Макаруни асорті</h3>
+            <p class="text-sm text-coffee leading-relaxed">Набір з 6 французьких макарунів: ваніль, шоколад, малина, фісташка.</p>
+            <div class="flex items-center justify-between pt-2 gap-2">
+              <span class="text-lg font-bold text-chocolate whitespace-nowrap">180 грн</span>
+              <button onclick="addToCart('macarons', 'Макаруни асорті', 180)" class="bg-caramel text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-chocolate transition shrink-0">
+                Додати в кошик
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4. Мафін -->
+        <article class="bg-cream rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition group">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=600&q=80" alt="Шоколадний мафін" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="p-5 space-y-3">
+            <h3 class="font-serif text-xl font-semibold text-chocolate">Шоколадний мафін</h3>
+            <p class="text-sm text-coffee leading-relaxed">Насичений шоколадний мафін з шматочками темного шоколаду всередині.</p>
+            <div class="flex items-center justify-between pt-2 gap-2">
+              <span class="text-lg font-bold text-chocolate whitespace-nowrap">75 грн</span>
+              <button onclick="addToCart('muffin', 'Шоколадний мафін', 75)" class="bg-caramel text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-chocolate transition shrink-0">
+                Додати в кошик
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 5. Тарт -->
+        <article class="bg-cream rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition group">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=600&q=80" alt="Полуничний тарт" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="p-5 space-y-3">
+            <h3 class="font-serif text-xl font-semibold text-chocolate">Полуничний тарт</h3>
+            <p class="text-sm text-coffee leading-relaxed">Хрустке пісочне тісто, ванільний крем і свіжі полуниці зверху.</p>
+            <div class="flex items-center justify-between pt-2 gap-2">
+              <span class="text-lg font-bold text-chocolate whitespace-nowrap">120 грн</span>
+              <button onclick="addToCart('tart', 'Полуничний тарт', 120)" class="bg-caramel text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-chocolate transition shrink-0">
+                Додати в кошик
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 6. Еклер -->
+        <article class="bg-cream rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition group">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1612203985729-70726954388c?w=600&q=80" alt="Фісташковий еклер" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="p-5 space-y-3">
+            <h3 class="font-serif text-xl font-semibold text-chocolate">Фісташковий еклер</h3>
+            <p class="text-sm text-coffee leading-relaxed">Легке заварне тісто, фісташковий крем і тонкий шар глазурі зверху.</p>
+            <div class="flex items-center justify-between pt-2 gap-2">
+              <span class="text-lg font-bold text-chocolate whitespace-nowrap">110 грн</span>
+              <button onclick="addToCart('eclair', 'Фісташковий еклер', 110)" class="bg-caramel text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-chocolate transition shrink-0">
+                Додати в кошик
+              </button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Contacts -->
+  <section id="contacts" class="py-16 sm:py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12">
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-chocolate mb-3">Контакти</h2>
+        <p class="text-coffee">Завітайте до нас або напишіть — ми завжди раді</p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-10 lg:gap-16">
+        <!-- Info -->
+        <div class="space-y-7">
+          <div class="flex gap-4">
+            <div class="w-12 h-12 rounded-full bg-beige flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-chocolate" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-chocolate mb-1">Адреса</h4>
+              <p class="text-coffee text-sm">вул. Вишнева, 12, Київ</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="w-12 h-12 rounded-full bg-beige flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-chocolate" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-chocolate mb-1">Телефон</h4>
+              <p class="text-coffee text-sm">+38 (044) 123-45-67</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="w-12 h-12 rounded-full bg-beige flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-chocolate" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-chocolate mb-1">Email</h4>
+              <p class="text-coffee text-sm">hello@sweetcrumbs.ua</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="w-12 h-12 rounded-full bg-beige flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-chocolate" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-chocolate mb-1">Години роботи</h4>
+              <p class="text-coffee text-sm">Пн–Нд: 08:00 – 20:00</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="bg-beige/50 rounded-3xl p-6 sm:p-8 border border-soft/60">
+          <h3 class="font-serif text-xl font-bold text-chocolate mb-5">Зв’язатися з нами</h3>
+          <form id="contact-form" class="space-y-4" onsubmit="handleContact(event)">
+            <div>
+              <label for="name" class="block text-sm font-medium text-coffee mb-1.5">Ім’я</label>
+              <input type="text" id="name" required placeholder="Ваше ім’я" class="w-full px-4 py-3 rounded-xl bg-cream border border-soft focus:outline-none focus:ring-2 focus:ring-caramel/50 text-chocolate placeholder:text-coffee/50">
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-medium text-coffee mb-1.5">Телефон</label>
+              <input type="tel" id="phone" required placeholder="+38 (0__) ___-__-__" class="w-full px-4 py-3 rounded-xl bg-cream border border-soft focus:outline-none focus:ring-2 focus:ring-caramel/50 text-chocolate placeholder:text-coffee/50">
+            </div>
+            <div>
+              <label for="message" class="block text-sm font-medium text-coffee mb-1.5">Повідомлення (необов’язково)</label>
+              <textarea id="message" rows="3" placeholder="Ваше питання або побажання..." class="w-full px-4 py-3 rounded-xl bg-cream border border-soft focus:outline-none focus:ring-2 focus:ring-caramel/50 text-chocolate placeholder:text-coffee/50 resize-none"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-chocolate text-cream py-3.5 rounded-full font-medium hover:bg-coffee transition shadow-md">
+              Надіслати
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-chocolate text-cream py-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <p class="font-serif text-lg font-bold">Sweet Crumbs</p>
+      <div class="flex items-center gap-6 text-sm text-soft">
+        <a href="#" class="hover:text-cream transition">Instagram</a>
+        <a href="#" class="hover:text-cream transition">Facebook</a>
+        <a href="#" class="hover:text-cream transition">Telegram</a>
+      </div>
+      <p class="text-soft text-sm">© 2026 Sweet Crumbs</p>
+    </div>
+  </footer>
+
+  <!-- Cart Overlay -->
+  <div id="cart-overlay" class="fixed inset-0 bg-black/40 z-50 opacity-0 pointer-events-none cart-overlay"></div>
+
+  <!-- Cart Panel -->
+  <div id="cart-panel" class="fixed top-0 right-0 h-full w-full max-w-md bg-cream z-50 shadow-2xl cart-panel closed flex flex-col">
+    <div class="flex items-center justify-between p-5 border-b border-soft">
+      <h2 class="font-serif text-xl font-bold text-chocolate">Ваш кошик</h2>
+      <button id="close-cart" class="p-2 hover:bg-beige rounded-full transition" aria-label="Закрити">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-chocolate" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div id="cart-items" class="flex-1 overflow-y-auto p-5 space-y-4">
+      <p id="empty-cart" class="text-coffee text-center py-10">Кошик порожній</p>
+    </div>
+    <div class="p-5 border-t border-soft space-y-4">
+      <div class="flex justify-between items-center text-lg font-bold text-chocolate">
+        <span>Разом:</span>
+        <span id="cart-total">0 грн</span>
+      </div>
+      <button id="checkout-btn" class="w-full bg-chocolate text-cream py-3.5 rounded-full font-medium hover:bg-coffee transition disabled:opacity-40 disabled:cursor-not-allowed" disabled>
+        Оформити замовлення
+      </button>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="success-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="absolute inset-0 bg-black/50" onclick="closeSuccess()"></div>
+    <div class="relative bg-cream rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl">
+      <div class="w-16 h-16 bg-caramel/20 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-caramel" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <h3 class="font-serif text-2xl font-bold text-chocolate mb-2">Дякуємо!</h3>
+      <p class="text-coffee mb-6">Ваше замовлення прийнято. Ми скоро з вами зв’яжемося.</p>
+      <button onclick="closeSuccess()" class="bg-chocolate text-cream px-6 py-2.5 rounded-full font-medium hover:bg-coffee transition">
+        Чудово
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const cart = {};
+    const cartBtn = document.getElementById('cart-btn');
+    const cartPanel = document.getElementById('cart-panel');
+    const cartOverlay = document.getElementById('cart-overlay');
+    const closeCartBtn = document.getElementById('close-cart');
+    const cartItems = document.getElementById('cart-items');
+    const emptyCart = document.getElementById('empty-cart');
+    const cartCount = document.getElementById('cart-count');
+    const cartTotal = document.getElementById('cart-total');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const successModal = document.getElementById('success-modal');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    let mobileOpen = false;
+
+    function openMobileMenu() {
+      mobileMenu.style.maxHeight = '240px';
+      mobileMenu.style.opacity = '1';
+      mobileOpen = true;
+    }
+    function closeMobileMenu() {
+      mobileMenu.style.maxHeight = '0';
+      mobileMenu.style.opacity = '0';
+      mobileOpen = false;
+    }
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileOpen ? closeMobileMenu() : openMobileMenu();
+    });
+
+    function openCart() {
+      cartPanel.classList.remove('closed');
+      cartOverlay.classList.remove('opacity-0', 'pointer-events-none');
+      cartOverlay.classList.add('opacity-100');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCart() {
+      cartPanel.classList.add('closed');
+      cartOverlay.classList.add('opacity-0', 'pointer-events-none');
+      cartOverlay.classList.remove('opacity-100');
+      document.body.style.overflow = '';
+    }
+
+    cartBtn.addEventListener('click', openCart);
+    closeCartBtn.addEventListener('click', closeCart);
+    cartOverlay.addEventListener('click', closeCart);
+
+    function addToCart(id, name, price) {
+      if (cart[id]) {
+        cart[id].qty += 1;
+      } else {
+        cart[id] = { name, price, qty: 1 };
+      }
+      updateCartUI();
+      openCart();
+    }
+
+    function changeQty(id, delta) {
+      if (!cart[id]) return;
+      cart[id].qty += delta;
+      if (cart[id].qty <= 0) delete cart[id];
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const items = Object.entries(cart);
+      const totalQty = items.reduce((sum, [, item]) => sum + item.qty, 0);
+      const totalPrice = items.reduce((sum, [, item]) => sum + item.price * item.qty, 0);
+
+      if (totalQty > 0) {
+        cartCount.textContent = totalQty;
+        cartCount.classList.remove('hidden');
+        checkoutBtn.disabled = false;
+        emptyCart.classList.add('hidden');
+      } else {
+        cartCount.classList.add('hidden');
+        checkoutBtn.disabled = true;
+        emptyCart.classList.remove('hidden');
+      }
+
+      cartTotal.textContent = totalPrice + ' грн';
+
+      cartItems.querySelectorAll('.cart-item').forEach(el => el.remove());
+
+      items.forEach(([id, item]) => {
+        const div = document.createElement('div');
+        div.className = 'cart-item flex items-center justify-between gap-3 bg-beige/60 rounded-xl p-3 fade-in';
+        div.innerHTML = `
+          <div class="flex-1 min-w-0">
+            <p class="font-medium text-chocolate truncate">${item.name}</p>
+            <p class="text-sm text-coffee">${item.price} грн × ${item.qty}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="changeQty('${id}', -1)" class="w-8 h-8 rounded-full bg-cream text-chocolate font-bold hover:bg-soft transition">−</button>
+            <span class="w-6 text-center font-medium">${item.qty}</span>
+            <button onclick="changeQty('${id}', 1)" class="w-8 h-8 rounded-full bg-cream text-chocolate font-bold hover:bg-soft transition">+</button>
+          </div>
+        `;
+        cartItems.appendChild(div);
+      });
+    }
+
+    checkoutBtn.addEventListener('click', () => {
+      if (Object.keys(cart).length === 0) return;
+      closeCart();
+      Object.keys(cart).forEach(k => delete cart[k]);
+      updateCartUI();
+      successModal.classList.remove('opacity-0', 'pointer-events-none');
+      successModal.classList.add('opacity-100');
+    });
+
+    function closeSuccess() {
+      successModal.classList.add('opacity-0', 'pointer-events-none');
+      successModal.classList.remove('opacity-100');
+    }
+
+    function handleContact(e) {
+      e.preventDefault();
+      e.target.reset();
+      successModal.classList.remove('opacity-0', 'pointer-events-none');
+      successModal.classList.add('opacity-100');
+    }
+
+    // Підсвітка активної вкладки при скролі
+    const sections = ['home', 'about', 'products', 'contacts'];
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    function updateActiveNav() {
+      const scrollY = window.scrollY + 120;
+      let current = 'home';
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.offsetTop <= scrollY) current = id;
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+      });
+    }
+    window.addEventListener('scroll', updateActiveNav);
+    updateActiveNav();
+  </script>
+</body>
+</html>
